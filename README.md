@@ -17,14 +17,14 @@ In order to work with the azure ml cli it is necessary to login to the azure acc
 az ad sp create-for-rbac --sdk-auth --name ml-auth
 ```
 Screenshot:
-![Authentication](pictures\create-service-principal.png)
+![Authentication](/pictures/create-service-principal.png)
 
 ### Get the `objectId` using the `clientId` from the previous command:
 ```
 az ad sp show --id ac3638b4-3928-4a75-b4e5-131ec8887d04
 ```
 Screenshot:
-![Obtain object id](pictures\get-object-id.png)
+![Obtain object id](/pictures/get-object-id.png)
 
 ### Share the workspace with the created service principal using the command:
 ```
@@ -35,41 +35,41 @@ az ml workspace share \
       --role owner
 ```
 Screenshot: 
-![Share workspace](pictures\share-workspaces.png)
+![Share workspace](/pictures/share-workspaces.png)
 
 
 ### 2. Automated ML Experiment
 After we have authenticated we will define an automated ml experiment. For that we need to:
 
 ### Register the dataset:
-![Dataset registration](pictures\dataset-registered.png)
+![Dataset registration](/pictures/dataset-registered.png)
 
 ### Define the ML pipeline:
-![Define the ML pipeline](pictures\pipeline-in-azure-ml-studio.png)
+![Define the ML pipeline](/pictures/pipeline-in-azure-ml-studio.png)
 
 ### Pipeline structure:
-![Pipeline structure](pictures\pipeline-structure.png)
+![Pipeline structure](/pictures/pipeline-structure.png)
 
 ### Pipeline details:
-![Pipeline details](pictures\pipeline-overview.png)
+![Pipeline details](/pictures/pipeline-overview.png)
 
 ### Published pipeline:
-![Published the pipeline](pictures\published-pipeline.png)
+![Published the pipeline](/pictures/published-pipeline.png)
 
 ### Run the pipeline:
-![Run the pipeline](pictures\completed-run.png)
+![Run the pipeline](/pictures/completed-run.png)
 
 ### Get the best model:
-![Get the best model](pictures\completed-model.png)
+![Get the best model](/pictures/completed-model.png)
 
 
 ### 3. Deploy the best model
 
 ### Go to the model tab:
-![Get the best model](pictures\best-model.png)
+![Get the best model](/pictures/best-model.png)
 
 ### Click the deploy button which will give us a published endpoint:
-![Get the best model](pictures\deployed-model.png)
+![Get the best model](/pictures/deployed-model.png)
 
 ### 4. Enable logging
 It is done with just a small python script:
@@ -90,17 +90,17 @@ service = Webservice(name=name, workspace=ws)
 service.update(enable_app_insights=True)
 ```
 ### And we can se the logs from application insights:
-![logs](pictures\logs-from-ai.png)
+![logs](/pictures/logs-from-ai.png)
 
 ### 5. Swagger documentation
 
 The nice thing about ml studio is that the published endpoint comes with the swagger.json which is a way to document APIs that is highly human and machine readable. 
 
 ### Using this file we can consume the documentation via swagger ui:
-![swagger request](pictures\swagger-request.png)
+![swagger request](/pictures/swagger-request.png)
 
 ### and the response:
-![swagger response](pictures\swagger-request.png)
+![swagger response](/pictures/swagger-request.png)
 
 ### 6. Consume model endpoints
 We can do it with a small python script:
