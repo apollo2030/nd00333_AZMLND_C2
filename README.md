@@ -47,20 +47,20 @@ In order to have access to the data inside the azure ml studio a dataset must be
 ![Dataset registration](/pictures/dataset-registered.png)
 
 ### Define the ML pipeline
-For the purpose of this project the training pipeline will be fairly simple - it will contain only the dataset and the automl steps:
+![Pipeline ](/pictures/ml-training-pipeline-endpoints.png)
 
-![Define the ML pipeline](/pictures/pipeline-in-azure-ml-studio.png)
+To be able to trigger the pipeline from other CI/CD pipelines we need to have the pipeline published.
+![Use python to publish the pipeline](/pictures/python-publish-pipeline.png)
+Publishing the pipeline gives us a REST endpoint to interact with which has now the status of **Ative**:
+![Pipeline ](/pictures/ml-training-pipeline-endpoint-overview.png)
+
+When we click on the Pipeline runs tab we can see our submitted run:
+![Pipeline ](/pictures/ml-training-pipeline-run.png)
+
+For the purpose of this project the training pipeline will be fairly simple - it will contain only the dataset and the automl steps:
 
 ### Pipeline structure:
 ![Pipeline structure](/pictures/pipeline-structure.png)
-
-### Pipeline details:
-![Pipeline details](/pictures/pipeline-overview.png)
-
-### Published pipeline
-To be able to trigger the pipeline from other CI/CD pipelines we need to have the pipeline published:
-
-![Published the pipeline](/pictures/published-pipeline.png)
 
 ### Run the pipeline
 We will run the pipeline to generate the ml model:
