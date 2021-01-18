@@ -41,10 +41,14 @@ Screenshot:
 ### 2. Automated ML Experiment
 After we have authenticated we will define an automated ml experiment. For that we need to:
 
-### Register the dataset:
+### Register the dataset
+In order to have access to the data inside the azure ml studio a dataset must be registered. It is done in the dataset section of the ml studio. Azure ml studio offers different possibilities to register a dataset - from local files, local datastores, web files and even from open datasets. We will use From web files option: 
+
 ![Dataset registration](/pictures/dataset-registered.png)
 
-### Define the ML pipeline:
+### Define the ML pipeline
+For the purpose of this project the training pipeline will be fairly simple - it will contain only the dataset and the automl steps:
+
 ![Define the ML pipeline](/pictures/pipeline-in-azure-ml-studio.png)
 
 ### Pipeline structure:
@@ -53,42 +57,35 @@ After we have authenticated we will define an automated ml experiment. For that 
 ### Pipeline details:
 ![Pipeline details](/pictures/pipeline-overview.png)
 
-### Published pipeline:
+### Published pipeline
+To be able to trigger the pipeline from other CI/CD pipelines we need to have the pipeline published:
+
 ![Published the pipeline](/pictures/published-pipeline.png)
 
-### Run the pipeline:
+### Run the pipeline
+We will run the pipeline to generate the ml model:
+
 ![Run the pipeline](/pictures/completed-run.png)
 
 ### Get the best model:
+The automl pipeline in particular does a number of runs to determine the best model architecture for us, all we have to do is to select the best run for further deployment:
+
 ![Get the best model](/pictures/completed-model.png)
 
-
 ### 3. Deploy the best model
+This is the step that makes our model useful outside the studio and one step closer to the users.
 
-### Go to the model tab:
+To deploy a model from a run we need to go to the model tab:
 ![Get the best model](/pictures/best-model.png)
 
-### Click the deploy button which will give us a published endpoint:
+Click the deploy button which will give us a published endpoint:
 ![Get the best model](/pictures/deployed-model.png)
 
 ### 4. Enable logging
-It is done with just a small python script:
+This step is a crucial step for any webservice that is intended for production. Logging offers insights and early warning signs that our service migh not be doing well. Logging is used as well for investigation of any incidents or failures.
 
-```python
-from azureml.core import Workspace
-from azureml.core.webservice import Webservice
+Running the [enable-ai.py](enable-ai.py) script will enable logging for our model endpoint.
 
-# Requires the config to be downloaded first to the current working directory
-ws = Workspace.from_config()
-
-# Set with the deployment name
-name = "bank-marketing-best-model"
-
-# load existing web service
-service = Webservice(name=name, workspace=ws)
-# enable application insight
-service.update(enable_app_insights=True)
-```
 ### And we can se the logs from application insights:
 ![logs](/pictures/logs-from-ai.png)
 
@@ -103,80 +100,10 @@ The nice thing about ml studio is that the published endpoint comes with the swa
 ![swagger response](/pictures/swagger-request.png)
 
 ### 6. Consume model endpoints
-We can do it with a small python script:
-```python
-import requests
-import json
-
-# URL for the web service, should be similar to:
-# 'http://8530a665-66f3-49c8-a953-b82a2d312917.eastus.azurecontainer.io/score'
-scoring_uri = 'http://f3734569-4678-436c-bc6c-1b65c44a21cf.westeurope.azurecontainer.io/score'
-# If the service is authenticated, set the key or token
-key = 'AWgj8ZdjCdqjgbDCiI1Czh6eaEhEJOGE'
-
-# Two sets of data to score, so we get two results back
-data = {"data":
-        [
-          {
-            "age": 17,
-            "campaign": 1,
-            "cons.conf.idx": -46.2,
-            "cons.price.idx": 92.893,
-            "contact": "cellular",
-            "day_of_week": "mon",
-            "default": "no",
-            "duration": 971,
-            "education": "university.degree",
-            "emp.var.rate": -1.8,
-            "euribor3m": 1.299,
-            "housing": "yes",
-            "job": "blue-collar",
-            "loan": "yes",
-            "marital": "married",
-            "month": "may",
-            "nr.employed": 5099.1,
-            "pdays": 999,
-            "poutcome": "failure",
-            "previous": 1
-          },
-          {
-            "age": 87,
-            "campaign": 1,
-            "cons.conf.idx": -46.2,
-            "cons.price.idx": 92.893,
-            "contact": "cellular",
-            "day_of_week": "mon",
-            "default": "no",
-            "duration": 471,
-            "education": "university.degree",
-            "emp.var.rate": -1.8,
-            "euribor3m": 1.299,
-            "housing": "yes",
-            "job": "blue-collar",
-            "loan": "yes",
-            "marital": "married",
-            "month": "may",
-            "nr.employed": 5099.1,
-            "pdays": 999,
-            "poutcome": "failure",
-            "previous": 1
-          },
-      ]
-    }
-# Convert to JSON string
-input_data = json.dumps(data)
-with open("data.json", "w") as _f:
-    _f.write(input_data)
-
-# Set the content type
-headers = {'Content-Type': 'application/json'}
-# If authentication is enabled, set the authorization header
-headers['Authorization'] = f'Bearer {key}'
-
-# Make the request and display the response
-resp = requests.post(scoring_uri, input_data, headers=headers)
-print(resp.json())
-```
+Check [endpoint.py](endpoint.py) script to see an example of consuming the REST endpoint.
 
 ## Screen Recording
 You can find a screen cast here: https://youtu.be/cCXFPUZrlMg
+
+## Further Improvements
+In order to make this project ready for prime time I would investigate and add model versioning. This is required to allow for fallback in case the new model is faulty. I would add as well a benchmarking step to the pipeline to be able to asses the quality of the new model.
